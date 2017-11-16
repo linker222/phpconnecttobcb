@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no, email=no">
+
+        <title>Test AI Server</title>
+		<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+		<script type="text/javascript">
+			function senddata()
+			{
+				var myname = $.trim($("#myname").val());		
+				if ( myname == "" )
+				{
+					$("#info").html("請輸入姓名！");			
+					$("#myname").focus();			
+					return;
+				}
+				var myhobbies = $.trim($("#myhobbies").val());
+				if ( myhobbies == "" )
+				{
+					$("#info").html("請輸入興趣！");
+					$("#myhobbies").focus();		
+					return;
+				}	
+				var mybirthdate = $.trim($("#mybirthdate").val());
+				if ( mybirthdate == "" )
+				{
+					$("#info").html("請輸入生日！");
+					$("#mybirthdate").focus();		
+					return;
+				}
+				var params = 
+				{
+					mode : "sendquestion",	
+					myname : myname,
+					myhobbies : myhobbies,
+					mybirthdate : mybirthdate
+				};
+				$.ajax
+				({		
+					type : "POST",        
+					url : "askai.php",
+					data : $.param(params), 
+					datatype : "json",
+					//async: true,
+					error : function ( xhr, textStatus, errorThrown ){ alert( textStatus );console.log(textStatus); },
+					success : function ( data, textStatus )
+					{ 			
+						console.log(data);
+						$("#info").html(data.author);
+					} 				
+				});				
+			}
+		</script>
+    </head>
+    <body>
+
+        <form id="form1" enctype="multipart/form-data" method="post">
+		<p>姓名：
+		<label>						
+			<input type="text" name="myname" id="myname" ><br >
+		</label>
+		</p>
+		<p>興趣：
+		<label>						
+			<input type="text" name="myhobbies" id="myhobbies"><br >
+		</label>
+		</p>
+		<p>生日：
+		<label>						
+			<input type="text" name="mybirthdate" id="mybirthdate"><br >
+		</label>
+		</p>
+		<p>
+		<label>
+				<input type="button" value="確認" onclick="senddata()" />
+		</label>
+		</p>
+		<p id="info" style="color:red" >請輸入資料！</p>
+        </form>
+    </body>
+</html>
